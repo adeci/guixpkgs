@@ -16,7 +16,7 @@
       url = "git+https://codeberg.org/guix/guix.git?ref=version-1.5.0&shallow=1";
       flake = false;
     };
-    guix-transfer.url = "github:fzakaria/guix-transfer";
+    guix-transfer.url = "github:adeci/guix-transfer/guix-by-nix-demo";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
