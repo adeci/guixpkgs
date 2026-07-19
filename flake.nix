@@ -133,6 +133,22 @@
 
       # `nix fmt` formats the tree; `nix flake check` verifies it is formatted.
       formatter.${system} = treefmtEval.config.build.wrapper;
-      checks.${system}.formatting = treefmtEval.config.build.check self;
+      checks.${system} = {
+        formatting = treefmtEval.config.build.check self;
+        bash-interface =
+          let
+            bash = self.packages.${system}.bash;
+          in
+          assert bash ? unwrapped;
+          assert bash ? runtimeEnv;
+          assert bash.shellPath == "/bin/bash";
+          pkgs.runCommand "guixpkgs-bash-interface" { } ''
+            test -x ${bash}/bin/bash
+            test -x ${bash.unwrapped}/bin/bash
+            test -f ${bash.runtimeEnv}/etc/profile
+            ${bash}/bin/bash --version >/dev/null
+            touch "$out"
+          '';
+      };
     };
 }
